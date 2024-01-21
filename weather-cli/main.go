@@ -12,24 +12,20 @@ import (
 const weatherAPIURL = "https://api.openweathermap.org/data/2.5/weather"
 
 var apiKey string
+var city string
 
 func init() {
-	flag.StringVar(&apiKey, "api-key", "", "Your API key")
+	flag.StringVar(&apiKey, "api-key", "", "Your OpenWeatherMap API key")
+	flag.StringVar(&city, "city", "", "Name of the city")
 	flag.Parse()
 
 	if apiKey == "" {
-		fmt.Println("Error: API key is required. Use -api-key flag.")
-		os.Exit(1)
+		apiKey = "81bead084b5dfe3432009ae4f0f16753"
+		fmt.Println("Warning: Using default api-key, Use -api-key flag to enter your own key.")
 	}
 }
 
 func main() {
-	if flag.NArg() == 0 {
-		fmt.Println("Usage: weather-cli [flags] <city>")
-		os.Exit(1)
-	}
-
-	city := os.Args[3]
 	weather, err := getWeather(city)
 	
 	if err != nil {
