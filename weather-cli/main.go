@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -9,15 +10,26 @@ import (
 )
 
 const weatherAPIURL = "https://api.openweathermap.org/data/2.5/weather"
-const apiKey = "81bead084b5dfe3432009ae4f0f16753"
+
+var apiKey string
+
+func init() {
+	flag.StringVar(&apiKey, "api-key", "", "Your API key")
+	flag.Parse()
+
+	if apiKey == "" {
+		fmt.Println("Error: API key is required. Use -api-key flag.")
+		os.Exit(1)
+	}
+}
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("Usage: weather-cli <city>")
+	if flag.NArg() == 0 {
+		fmt.Println("Usage: weather-cli [flags] <city>")
 		os.Exit(1)
 	}
 
-	city := os.Args[1]
+	city := os.Args[3]
 	weather, err := getWeather(city)
 	
 	if err != nil {
